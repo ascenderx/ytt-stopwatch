@@ -18,7 +18,7 @@ class Animator {
   _tick(timestamp) {
     let elapsed = timestamp - this._previous;
     if (elapsed >= this._interval) {
-      this._callback(timestamp);
+      this._callback();
       this._previous = timestamp;
     }
     
