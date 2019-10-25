@@ -132,6 +132,8 @@
     let touched = false;
     
     divTopContainer.addEventListener('touchstart', (event) => {
+      event.preventDefault();
+      
       if (!touched) {
         touched = true;
         toggle();
@@ -139,12 +141,15 @@
     });
     
     divTopContainer.addEventListener('touchend', (event) => {
+      event.preventDefault();
+      
       touched = false;
     });
     
     divTopContainer.addEventListener('touchcancel', (event) => {
+      event.preventDefault();
+      
       touched = false;
     });
   });
 })();
-
