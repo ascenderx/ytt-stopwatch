@@ -25,7 +25,7 @@ canvas {
   height: 400px;
   top: calc(50% - 400px/2);
   right: calc(50% - 400px/2);
-  font: 40pt Verdana sans-serif;
+  font: 40pt sans-serif;
   text-align: center;
   line-height: 400px;
 }
