@@ -1,4 +1,5 @@
 (() => {
+  let divTopContainer;
   let cvs;
   let ctx;
   let lblHours;
@@ -44,35 +45,44 @@
     return 2 * Math.PI * (stopwatch.seconds / 60);
   }
   
+  function clearCanvas() {
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+  }
+  
+  function drawBGArc() {
+    // draw a black circle
+    ctx.strokeStyle = 'black';
+    ctx.beginPath();
+    ctx.arc(
+      cvs.width * 0.5,
+      cvs.height * 0.5,
+      cvs.width * 0.5 - ARC_THICKNESS,
+      0,
+      2 * Math.PI
+    );
+    ctx.stroke();
+  }
+  
+  function drawFGArc() {
+    // draw a green arc
+    ctx.strokeStyle = '#0f0';
+    ctx.beginPath();
+    ctx.arc(
+      cvs.width * 0.5,
+      cvs.height * 0.5,
+      cvs.width * 0.5 - ARC_THICKNESS,
+      START_ANGLE,
+      START_ANGLE + getElapsedAngle()
+    );
+    ctx.stroke();
+  }
+  
   function draw() {
-    ctx.lineWidth = ARC_THICKNESS;
-    
     if (stopwatch.seconds === 0) {
-      ctx.clearRect(0, 0, cvs.width, cvs.height);
-      
-      // draw a black circle
-      ctx.strokeStyle = 'black';
-      ctx.beginPath();
-      ctx.arc(
-        cvs.width * 0.5,
-        cvs.height * 0.5,
-        cvs.width * 0.5 - ARC_THICKNESS,
-        0,
-        2 * Math.PI
-      );
-      ctx.stroke();
+      clearCanvas();
+      drawBGArc();
     } else {
-      // draw a green arc
-      ctx.strokeStyle = '#0f0';
-      ctx.beginPath();
-      ctx.arc(
-        cvs.width * 0.5,
-        cvs.height * 0.5,
-        cvs.width * 0.5 - ARC_THICKNESS,
-        START_ANGLE,
-        START_ANGLE + getElapsedAngle()
-      );
-      ctx.stroke();
+      drawFGArc();
     }
   }
   
@@ -82,6 +92,7 @@
   }
   
   window.addEventListener('load', () => {
+    divTopContainer = document.getElementById('div-top-container');
     cvs = document.getElementById('cvs');
     ctx = cvs.getContext('2d');
     
@@ -93,8 +104,26 @@
     stopwatch = new Stopwatch();
     animator = new Animator(tick, INTERVAL);
     
-    stopwatch.resume();
-    animator.start();
+    // init display
+    lblHours.innerText = "00";
+    lblMinutes.innerText = "00";
+    lblSeconds.innerText = "00";
+    lblMilliseconds.innerText = "0";
+    ctx.lineWidth = ARC_THICKNESS;
+    clearCanvas();
+    drawBGArc();
+    
+    divTopContainer.addEventListener('dblclick', (event) => {
+      event.preventDefault();
+      
+      if (stopwatch.isRunning) {
+        stopwatch.pause();
+        animator.stop();
+      } else {
+        stopwatch.resume();
+        animator.start();
+      }
+    });
   });
 })();
 

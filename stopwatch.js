@@ -61,5 +61,9 @@ class Stopwatch {
     }
     return Math.floor((this._elapsedTime / (1000 * 3600)) % 24);
   }
+  
+  get isRunning() {
+    return this._startTime !== null;
+  }
 }
 
