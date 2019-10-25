@@ -1,155 +1,37 @@
-(() => {
-  let divTopContainer;
-  let cvs;
-  let ctx;
-  let lblHours;
-  let lblMinutes;
-  let lblSeconds;
-  let lblMilliseconds;
-  let stopwatch;
-  const INTERVAL = 10;
-  const START_ANGLE = -Math.PI * 0.5;
-  const ARC_THICKNESS = 10;
-  
-  function padZerosLeft(num, width) {
-    let result = `${num}`.split('');
-    let difference = width - result.length;
-    
-    for (let d = 0; d < difference; d++) {
-      result.unshift('0');
-    }
-    
-    return result.join('');
-  }
-  
-  function update() {
-    stopwatch.update();
-    
-    let hours = stopwatch.hours;
-    let minutes = stopwatch.minutes;
-    let seconds = stopwatch.seconds;
-    let milliseconds = Math.floor(stopwatch.milliseconds / 100);
-    
-    let hr = padZerosLeft(hours, 2);
-    let mn = padZerosLeft(minutes, 2);
-    let sc = padZerosLeft(seconds, 2);
-    let ml = padZerosLeft(milliseconds, 1);
-    
-    lblHours.innerText = hr;
-    lblMinutes.innerText = mn;
-    lblSeconds.innerText = sc;
-    lblMilliseconds.innerText = ml;
-  }
-  
-  function getElapsedAngle() {
-    return 2 * Math.PI * (stopwatch.seconds / 60);
-  }
-  
-  function clearCanvas() {
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-  }
-  
-  function drawBGArc() {
-    // draw a black circle
-    ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.arc(
-      cvs.width * 0.5,
-      cvs.height * 0.5,
-      cvs.width * 0.5 - ARC_THICKNESS,
-      0,
-      2 * Math.PI
-    );
-    ctx.stroke();
-  }
-  
-  function drawFGArc() {
-    // draw a green arc
-    ctx.strokeStyle = '#0f0';
-    ctx.beginPath();
-    ctx.arc(
-      cvs.width * 0.5,
-      cvs.height * 0.5,
-      cvs.width * 0.5 - ARC_THICKNESS,
-      START_ANGLE,
-      START_ANGLE + getElapsedAngle()
-    );
-    ctx.stroke();
-  }
-  
-  function draw() {
-    if (stopwatch.seconds === 0) {
-      clearCanvas();
-      drawBGArc();
-    } else {
-      drawFGArc();
-    }
-  }
-  
-  function tick() {
-    update();
-    draw();
-  }
-  
-  function toggle() {
-    if (stopwatch.isRunning) {
-      stopwatch.pause();
-      animator.stop();
-    } else {
-      stopwatch.resume();
-      animator.start();
-    }
-  }
-  
-  window.addEventListener('load', () => {
-    divTopContainer = document.getElementById('div-top-container');
-    cvs = document.getElementById('cvs');
-    ctx = cvs.getContext('2d');
-    
-    lblHours = document.getElementById('lbl-hours');
-    lblMinutes = document.getElementById('lbl-minutes');
-    lblSeconds = document.getElementById('lbl-seconds');
-    lblMilliseconds = document.getElementById('lbl-milliseconds');
-    
-    stopwatch = new Stopwatch();
-    animator = new Animator(tick, INTERVAL);
-    
-    // init display
-    lblHours.innerText = "00";
-    lblMinutes.innerText = "00";
-    lblSeconds.innerText = "00";
-    lblMilliseconds.innerText = "0";
-    ctx.lineWidth = ARC_THICKNESS;
-    clearCanvas();
-    drawBGArc();
-    
-    divTopContainer.addEventListener('click', (event) => {
-      event.preventDefault();
-      
-      toggle();
-    });
-    
-    let touched = false;
-    
-    divTopContainer.addEventListener('touchstart', (event) => {
-      event.preventDefault();
-      
-      if (!touched) {
-        touched = true;
-        toggle();
-      }
-    });
-    
-    divTopContainer.addEventListener('touchend', (event) => {
-      event.preventDefault();
-      
-      touched = false;
-    });
-    
-    divTopContainer.addEventListener('touchcancel', (event) => {
-      event.preventDefault();
-      
-      touched = false;
-    });
+window.addEventListener('load', () => {
+  let app = new App({
+    topContainer: getByID('div-top-container'),
+    canvas: getByID('cvs'),
+    hoursLabel: getByID('lbl-hours'),
+    minutesLabel: getByID('lbl-minutes'),
+    secondsLabel: getByID('lbl-seconds'),
+    millisecondsLabel: getByID('lbl-milliseconds'),
   });
-})();
+  
+  let divTopContainer = getByID('div-top-container');
+  
+  divTopContainer.addEventListener('click', (event) => {
+    event.preventDefault();
+    app.toggle();
+  });
+  
+  divTopContainer.addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    
+    if (!touched) {
+      touched = true;
+      app.toggle();
+    }
+  });
+  
+  divTopContainer.addEventListener('touchend', (event) => {
+    event.preventDefault();
+    touched = false;
+  });
+  
+  divTopContainer.addEventListener('touchcancel', (event) => {
+    event.preventDefault();
+    touched = false;
+  });
+});
+
