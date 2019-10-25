@@ -91,6 +91,16 @@
     draw();
   }
   
+  function toggle() {
+    if (stopwatch.isRunning) {
+      stopwatch.pause();
+      animator.stop();
+    } else {
+      stopwatch.resume();
+      animator.start();
+    }
+  }
+  
   window.addEventListener('load', () => {
     divTopContainer = document.getElementById('div-top-container');
     cvs = document.getElementById('cvs');
@@ -113,16 +123,27 @@
     clearCanvas();
     drawBGArc();
     
-    divTopContainer.addEventListener('dblclick', (event) => {
+    divTopContainer.addEventListener('click', (event) => {
       event.preventDefault();
       
-      if (stopwatch.isRunning) {
-        stopwatch.pause();
-        animator.stop();
-      } else {
-        stopwatch.resume();
-        animator.start();
+      toggle();
+    });
+    
+    let touched = false;
+    
+    divTopContainer.addEventListener('touchstart', (event) => {
+      if (!touched) {
+        touched = true;
+        toggle();
       }
+    });
+    
+    divTopContainer.addEventListener('touchend', (event) => {
+      touched = false;
+    });
+    
+    divTopContainer.addEventListener('touchcancel', (event) => {
+      touched = false;
     });
   });
 })();

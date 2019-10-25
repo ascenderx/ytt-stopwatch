@@ -9,6 +9,10 @@ body {
   height: 100%;
 }
 
+.top-container {
+  cursor: pointer;
+}
+
 canvas {
   position: absolute;
   top: calc(50% - 400px/2);
