@@ -1,8 +1,9 @@
 (() => {
-  let cvs = document.getElementById('cvs');
-  let lblTime = document.getElementById('lbl-time');
-  
-  let stopwatch = new Stopwatch();
+  let cvs;
+  let ctx;
+  let lblTime;
+  let stopwatch;
+  const INTERVAL = 10;
   
   function padZerosLeft(num, width) {
     let result = `${num}`.split('');
@@ -31,10 +32,19 @@
     lblTime.innerText = `${hr}:${mn}:${sc}.${ml}`;
   }
   
-  const INTERVAL = 10;
-  let animator = new Animator(tick, INTERVAL);
+  function draw() {
+    
+  }
   
-  stopwatch.resume();
-  animator.start();
+  window.addEventListener('load', () => {
+    cvs = document.getElementById('cvs');
+    ctx = cvs.getContext('2d');
+    lblTime = document.getElementById('lbl-time');
+    stopwatch = new Stopwatch();
+    animator = new Animator(tick, INTERVAL);
+    
+    stopwatch.resume();
+    animator.start();
+  });
 })();
 
