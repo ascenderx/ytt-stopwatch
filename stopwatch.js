@@ -38,28 +38,28 @@ class Stopwatch {
     if (this._elapsedTime === null) {
       return null;
     }
-    return this._elapsedTime % 1000;
+    return Math.floor(this._elapsedTime % 1000);
   }
   
   get seconds() {
     if (this._elapsedTime === null) {
       return null;
     }
-    return (this._elapsedTime / 1000) % 60;
+    return Math.floor((this._elapsedTime / 1000) % 60);
   }
   
   get minutes() {
     if (this._elapsedTime === null) {
       return null;
     }
-    return (this._elapsedTime / (1000 * 60)) % 60; 
+    return Math.floor((this._elapsedTime / (1000 * 60)) % 60); 
   }
   
   get hours() {
     if (this._elapsedTime === null) {
       return null;
     }
-    return (this._elapsedTime / (1000 * 3600)) % 24;
+    return Math.floor((this._elapsedTime / (1000 * 3600)) % 24);
   }
 }
 
